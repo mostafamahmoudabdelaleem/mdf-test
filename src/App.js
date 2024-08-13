@@ -1,10 +1,9 @@
-import { useRef, useState } from "react";
+import { useState } from "react";
 import "./App.css";
 
 function App() {
   const [sessRef, setSessRef] = useState("");
   const [sessID, setSessID] = useState("");
-  const cookieRef = useRef("");
 
   const auth = () => {
     console.log("Auth", sessRef, sessID);
@@ -25,19 +24,12 @@ function App() {
       headers: headers,
     })
       .then((res) => {
-        let cookie = res?.headers?.["set-cookie"];
-        cookie?.[0]?.split(",")?.findIndex((item) => {
-          if (item?.includes("JSESSIONID")) {
-            cookieRef.current = item;
-          }
-        });
         return res.text();
       })
       .then((resText) => console.log("authentication:", resText))
       .catch(() => {});
   };
   const connect = () => {
-    console.log("cookie", cookieRef.current);
     const url = "wss://www.alrajhitadawul.com.sa/MDF/api/v1/WebSocket-PDS";
     const ws = new WebSocket(url, ["wss"]);
     ws.onmessage = (data) => {
