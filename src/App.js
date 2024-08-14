@@ -18,7 +18,7 @@ function App() {
     const headers = {
       "Content-Type": "application/json", //;charset=UTF-8
     };
-    fetch("https://www.alrajhitadawul.com.sa/MDF/api/v1/authentication", {
+    fetch("https://uat.alrajhitadawul.com.sa/MDF/api/v1/authentication", {
       method: "POST",
       body: JSON.stringify(payload),
       headers: headers,
@@ -30,8 +30,20 @@ function App() {
       .catch(() => {});
   };
   const connect = () => {
-    const url = "wss://www.alrajhitadawul.com.sa/MDF/api/v1/WebSocket-PDS";
-    const ws = new WebSocket(url, ["wss"]);
+    const url = "https://uat.alrajhitadawul.com.sa/MDF/api/v1/WebSocket-PDS";
+
+    let headers = {};
+
+    headers["Upgrade"] = `websocket`;
+    headers["Connection"] = `Upgrade`;
+    headers["Sec-WebSocket-Key"] = `dGhlIHNhbXBsZSBub25jZQ==`;
+    headers["Sec-WebSocket-Version"] = `13`;
+    headers["cookie"] = `${sessID}`;
+    headers["Origin"] = "https://uat.alrajhitadawul.com.sa"
+
+    const ws = new WebSocket(`${url}`, null, {
+      headers,
+    });
     ws.onmessage = (data) => {
       console.log("Getting message from server " + data);
     };
